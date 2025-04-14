@@ -1,0 +1,148 @@
+---
+
+---
+
+<div class="search-container relative">
+  <div class="relative">
+    <input 
+      type="text" 
+      id="city-search" 
+      placeholder="Search the city..." 
+      class="w-full p-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    />
+    <button
+      type="button" 
+      id="search-button" 
+      class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+      aria-label="search"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+      </svg>
+    </button>
+  </div>
+
+  <div id="search-results" class="absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg hidden">
+    <ul class="py-1 max-h-60 overflow-auto">
+    </ul>
+  </div>
+</div>
+
+<script>
+  import { searchCities } from '../lib/api/radar.js';
+
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  function displayResults(cities) {
+    const searchResults = document.getElementById('search-results');
+    if (!searchResults) return;
+
+    const resultsList = searchResults.querySelector('ul');
+    if (!resultsList) return;
+
+    resultsList.innerHTML = '';
+
+    if (cities.length === 0) return;
+
+    cities.forEach(city => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <button class="w-full text-left px-4 py-2 hover:bg-gray-100" 
+                data-city='${JSON.stringify(city)}'>
+          ${city.address}
+        </button>
+      `;
+      resultsList.appendChild(li);
+    });
+
+    searchResults.classList.remove('hidden');
+  }
+
+  function selectCity(cityData) {
+    const searchInput = document.getElementById('city-search');
+    const searchResults = document.getElementById('search-results');
+
+    if (!searchInput || !searchResults) return;
+
+    searchInput.value = cityData.address;
+    searchResults.classList.add('hidden');
+
+    window.dispatchEvent(new CustomEvent('cityChanged', { 
+      detail: cityData 
+    }));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('city-search');
+    const searchResults = document.getElementById('search-results');
+    const searchButton = document.getElementById('search-button');
+    
+    if (!searchInput || !searchResults || !searchButton) return;
+    
+    searchInput.addEventListener('input', debounce(async (e) => {
+      const query = e.target.value.trim();
+      
+      if (query.length < 2) {
+        searchResults.classList.add('hidden');
+        return;
+      }
+      
+      try {
+        const cities = await searchCities(query);
+        displayResults(cities)
+      } catch (error) {
+          console.error('city search error:', error);
+      }
+    }, 300));
+    
+    searchResults.addEventListener('click', (e) => {
+      const cityButton = e.target.closest('button[data-city]');
+      if (cityButton) {
+        try {
+          const cityData = JSON.parse(cityButton.dataset.city);
+          selectCity(cityData);
+        } catch (error) {
+          console.error('city data parse error:', error);
+        }
+      }
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.classList.add('hidden');
+      }
+    });
+    
+    searchButton.addEventListener('click', async () => {
+      const query = searchInput.value.trim();
+      
+      if (query.length < 2) return;
+      
+      try {
+        const cities = await searchCities(query);
+        
+        if (cities.length > 0) {
+          selectCity(cities[0]);
+        }
+      } catch (error) {
+        console.error('city search error:', error);
+      }
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        searchButton.click();
+      }
+    });
+  });
+</script>
