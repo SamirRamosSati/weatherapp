@@ -1,3 +1,11 @@
-<h1 class="text-3xl font-bold text-red-500 underline">
-  Hello world!
-</h1>
+
+---
+import DailyForecast from "./DailyForecast.astro";
+---
+<main class="flex justify-between p-8">
+  <div class="w-1/3"></div> <!-- reserved for current date section -->
+  <div class="w-1/3"></div> <!-- reserved for current weather section -->
+  <div class="w-1/3">
+  <DailyForecast />
+</div>
+</main>
