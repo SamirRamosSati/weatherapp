@@ -1,6 +1,7 @@
 ---
 import CurrentDate from '../components/CurrentDate.astro';
 import CurrentWeather from '../components/CurrentWeather.astro';
+import ThreeHourForecast from '../components/ThreeHourForecast.astro';
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 import "../styles/global.css";
@@ -8,6 +9,7 @@ import "../styles/global.css";
 
 <Layout>
 	<div class="flex">
+		<ThreeHourForecast lat="48.8566" lon="2.3522" city="Paris" />
 		<CurrentDate />
 		<CurrentWeather />
 	</div>
