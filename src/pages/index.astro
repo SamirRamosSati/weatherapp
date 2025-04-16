@@ -3,15 +3,20 @@ import CurrentDate from '../components/CurrentDate.astro';
 import CurrentWeather from '../components/CurrentWeather.astro';
 import ThreeHourForecast from '../components/ThreeHourForecast.astro';
 import Welcome from '../components/Welcome.astro';
+import DailyForecast from "../components/DailyForecast.astro";
 import Layout from '../layouts/Layout.astro';
 import "../styles/global.css";
 ---
 
 <Layout>
-	<div class="flex">
-		<ThreeHourForecast lat="48.8566" lon="2.3522" city="Paris" />
-		<CurrentDate />
-		<CurrentWeather />
+	<div class="flex justify-center max-w-[1080px] mx-auto pt-28">
+		<div class="w-full">
+			<div class="flex">
+				<CurrentDate />
+				<CurrentWeather />
+			</div>
+			<ThreeHourForecast lat="48.8566" lon="2.3522" city="Paris" />
+		</div>
+  		<DailyForecast />
 	</div>
-	<Welcome />
 </Layout>
