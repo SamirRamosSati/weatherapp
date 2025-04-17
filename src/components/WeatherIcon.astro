@@ -15,25 +15,25 @@ const className = Astro.props.class || '';
 let sizeClass, tempClass, celcClass, gapClass;
 
 switch (size) {
-    case 'xl':
-        sizeClass = 'w-60';
-        tempClass = 'text-8xl';
-        celcClass = 'text-5xl'
-        gapClass = 'gap-1';
-        break;
-    default:
-        sizeClass = 'w-14';
+  case 'xl':
+    sizeClass = 'w-60';
+    tempClass = 'text-8xl';
+    celcClass = 'text-5xl';
+    gapClass = 'gap-1';
+    break;
+  default:
+    sizeClass = 'w-14';
 
-        if (isVertical) {
-          tempClass = 'text-xl';
-          celcClass = 'text-sm'
-        } else {
-          tempClass = 'text-3xl';
-          celcClass = 'text-xl'
-        }
-        
-        gapClass = 'gap-4';
-        break;
+    if (isVertical) {
+      tempClass = 'text-xl';
+      celcClass = 'text-sm';
+    } else {
+      tempClass = 'text-3xl';
+      celcClass = 'text-xl';
+    }
+
+    gapClass = 'gap-4';
+    break;
 }
 
 function getWeatherIcon(code: number) {
@@ -74,7 +74,8 @@ const icon = getWeatherIcon(code);
   <div class={`${size === 'xl' ? 'w-60' : 'w-14'} flex justify-center`}>
     <img src={icon} alt="weather icon" class={sizeClass} />
   </div>
-  <p class={`${tempClass} ${isVertical ? 'translate-x-2' : 'gap-1'} font-medium flex`}>{typeof(temp) === 'number' ? temp.toFixed(1) : temp}<span class={celcClass}>°C</span></p>
+  <p class={`${tempClass} ${isVertical ? 'translate-x-2' : 'gap-1'} font-medium flex`}>
+    {typeof(temp) === 'number' ? temp.toFixed(1) : temp}
+    <span class={celcClass}>°C</span>
+  </p>
 </div>
-
-

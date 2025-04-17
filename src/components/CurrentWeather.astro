@@ -1,12 +1,12 @@
 ---
 import { fetchWeatherApi } from 'openmeteo';
-import WeatherIcon from './WeatherIcon.astro'
+import WeatherIcon from './WeatherIcon.astro';
 
 const params = {
-	"latitude": 52.52,
-	"longitude": 13.41,
-	"current": ["temperature_2m", "weather_code"],
-	"forecast_days": 1
+  latitude: 52.52,
+  longitude: 13.41,
+  current: ["temperature_2m", "weather_code"],
+  forecast_days: 1
 };
 
 const url = "https://api.open-meteo.com/v1/forecast";
@@ -14,28 +14,26 @@ const url = "https://api.open-meteo.com/v1/forecast";
 let time, weather, temp;
 
 try {
-    const responses = await fetchWeatherApi(url, params);
-    const response = responses[0];
+  const responses = await fetchWeatherApi(url, params);
+  const response = responses[0];
 
-    const utcOffsetSeconds = response.utcOffsetSeconds();
-    const timezone = response.timezone();
-    const timezoneAbbreviation = response.timezoneAbbreviation();
-    const latitude = response.latitude();
-    const longitude = response.longitude();
+  const utcOffsetSeconds = response.utcOffsetSeconds();
+  const current = response.current();
 
-    const current = response.current()!;
+  time = (new Date((Number(current.time()) + utcOffsetSeconds) * 1000))
+    .toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 
-    time = (new Date((Number(current.time()) + utcOffsetSeconds) * 1000)).toLocaleTimeString(undefined, {hour: '2-digit', minute:'2-digit'});
-    temp = current.variables(0)!.value().toFixed(1);
-    weather = current.variables(1)!.value();
+  temp = current.variables(0).value().toFixed(1);
+  weather = current.variables(1).value();
 } catch (error) {
-    console.error(error);
-    throw error;
+  console.error(error);
+  throw error;
 }
 ---
+
 <div class="flex flex-col items-center gap-4 w-full p-8">
-    <p class="text-2xl">{time}</p>
-    <div>
-        <WeatherIcon class="p-4" size="xl" code={weather} temp={temp} />
-    </div>
+  <p class="text-2xl">{time}</p>
+  <div>
+    <WeatherIcon class="p-4" size="xl" code={weather} temp={temp} />
+  </div>
 </div>
