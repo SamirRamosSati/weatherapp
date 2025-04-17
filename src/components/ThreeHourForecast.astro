@@ -4,9 +4,8 @@ import { fetchHourForcast } from '../lib/api/meteo';
 
 const url = new URL(Astro.request.url);
 const date = url.searchParams.get('date') ?? new Date().toISOString().split('T')[0];
-const lat = url.searchParams.get('lat') ?? '49.24';
-const lon = url.searchParams.get('lon') ?? '-123.12';
-const city = url.searchParams.get('city') ?? 'Vancouver';
+const lat = url.searchParams.get('lat') ?? '49.2827';
+const lon = url.searchParams.get('lon') ?? '-123.1207';
 
 const { hours, temps, codes } = await fetchHourForcast({date, lat, lon});
 ---

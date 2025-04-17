@@ -2,9 +2,58 @@
 import FavoriteButton from '../components/FavoriteButton.astro';
 
 const { class: className } = Astro.props;
+
+const url = new URL(Astro.request.url);
+const params = url.searchParams;
+
+const city = params.get('city');
+const lon = params.get('lon');
+const lat = params.get('lat');
+
 ---
 
 <div class={`w-full flex items-center gap-2 justify-center ${className}`}>
-    <h1 id="city-name" class="text-center text-2xl font-medium">Vancouver</h1>
-    <FavoriteButton city="Vancouver" latitude={49.2827} longitude={-123.1207} />
+    <h1 class="text-center text-2xl font-medium">{city}</h1>
+    <FavoriteButton city={city} latitude={lat} longitude={lon} />
 </div>
+
+<script>
+    const setCity = async (position) => {
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+
+        try {
+            const date = params.get('date') || '';
+            const lat = params.get('lat') || position.coords.latitude;
+            const lon = params.get('lon') || position.coords.longitude;
+    
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+            const data = await res.json();
+    
+            const cityName = data.address.city || data.address.town || data.address.village || "Location not found";
+
+            window.location.href = window.location.pathname + `?lat=${lat}&lon=${lon}&city=${cityName}${date ? '&date=' + date : ''}`;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
+    const setDefaultCity = () => {
+        window.location.href = window.location.pathname + `?lat=49.2827&lon=-123.1207&city=Vancouver`;;
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+        const queryString = window.location.search;
+        if (queryString.includes('city')) {
+            return;
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(setCity, setDefaultCity); // setCity if user allows location detect, setDefault if not
+        } else {
+            setDefaultCity();
+        }
+    });
+  </script>
+  

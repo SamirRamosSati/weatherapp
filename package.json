@@ -19,13 +19,13 @@
     "lucide-react": "^0.488.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwind-merge": "^3.2.0",
-    "tailwind-scrollbar-hide": "^2.0.0",
-    "tailwindcss": "^4.1.3",
-    "tw-animate-css": "^1.2.5"
+    "tailwind-merge": "^3.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19"
+    "@types/react-dom": "^18.2.19",
+    "tailwindcss": "^4.1.3",
+    "tw-animate-css": "^1.2.5",
+    "tailwind-scrollbar-hide": "^2.0.0"
   }
 }

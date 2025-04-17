@@ -37,7 +37,7 @@ export const fetchDailyForecast = async ({ lat, lon }) => {
 };
 
 export const fetchHourForcast = async (params) => {
-  const { date, lat, lon, city } = params;
+  const { date, lat, lon } = params;
   if (!date) {
     console.error('No date on fetching 3-hour forecast: ', date);
     return;

@@ -4,8 +4,8 @@ import { fetchCurrentForecast } from '../lib/api/meteo';
 
 const url = new URL(Astro.request.url);
 const selectedDate = url.searchParams.get('date');
-const lat = url.searchParams.get('lat') ?? '49.24';
-const lon = url.searchParams.get('lon') ?? '-123.12';
+const lat = url.searchParams.get('lat') ?? '49.2827';
+const lon = url.searchParams.get('lon') ?? '-123.1207';
 
 const today = new Date().toISOString().split('T')[0];
 console.log(selectedDate, today);
