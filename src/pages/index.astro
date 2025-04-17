@@ -2,13 +2,12 @@
 export const prerender = false;
 import CurrentDate from '../components/CurrentDate.astro';
 import CurrentWeather from '../components/CurrentWeather.astro';
+import City from '../components/City.astro';
 import ThreeHourForecast from '../components/ThreeHourForecast.astro';
-import Welcome from '../components/Welcome.astro';
-import DailyForecast from '../components/DailyForecast.astro';
+import DailyForecast from "../components/DailyForecast.astro";
 import SearchInput from '../components/SearchInput.astro';
-import Layout from '../layouts/Layout.astro';
-import FavoriteButton from '../components/FavoriteButton.astro';
 import FavoriteDropdown from '../components/FavoriteDropdown.jsx';
+import Layout from '../layouts/Layout.astro';
 import "../styles/global.css";
 
 let selectedDate = new Date().toISOString().split("T")[0];
@@ -23,31 +22,29 @@ if (cookieHeader) {
 ---
 
 <Layout>
-	<div class="flex items-center max-w-[1080px] mx-auto pt-28 justify-between">
-		<div class="max-w-[240px] ml-auto">
-			<FavoriteDropdown client:load />
-		</div>
-		<div class="w-full flex items-center justify-center">
-			<div class="flex items-center gap-2">
-				<h1 id="city-name" class="text-center text-2xl font-medium">Vancouver</h1>
-				<FavoriteButton city="Vancouver" latitude={49.2827} longitude={-123.1207} />
+	<div class="md:items-center justify-center max-w-[1080px] mx-auto pt-6 px-6">
+		<div class="flex gap-2 items-center w-full justify-between md:py-12">
+			<div class="max-w-[240px] ml-auto">
+				<FavoriteDropdown client:load />
 			</div>
-		</div>
-		<div class="max-w-[240px] ml-auto">
-			<SearchInput />
+			<City class="hidden md:flex" />
+			<div class="max-w-[240px] ml-auto">
+				<SearchInput />
+			</div>
+		</div>	
+		<City class="md:hidden py-8" />
+		<div class="flex flex-col md:flex-row md:items-between gap-16 md:gap-20 justify-center ">
+			<div class="w-full space-y-4 md:space-y-0">
+				<div class="flex">
+					<CurrentDate />
+					<CurrentWeather />
+				</div>
+				<ThreeHourForecast lat="48.8566" lon="2.3522" city="Paris" />
+			</div>
+			<DailyForecast />
 		</div>
 	</div>
-
-  <div class="flex justify-center max-w-[1080px] mx-auto pt-8">
-    <div class="w-full">
-      <div class="flex">
-        <CurrentDate selectedDate={selectedDate} />
-        <CurrentWeather selectedDate={selectedDate} />
-      </div>
-      <ThreeHourForecast lat="48.8566" lon="2.3522" city="Paris" selectedDate={selectedDate} />
-      <DailyForecast />
-    </div>
-  </div>
+</div>
 </Layout>
 
 <script is:inline>

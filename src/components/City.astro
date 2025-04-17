@@ -1,0 +1,10 @@
+---
+import FavoriteButton from '../components/FavoriteButton.astro';
+
+const { class: className } = Astro.props;
+---
+
+<div class={`w-full flex items-center gap-2 justify-center ${className}`}>
+    <h1 id="city-name" class="text-center text-2xl font-medium">Vancouver</h1>
+    <FavoriteButton city="Vancouver" latitude={49.2827} longitude={-123.1207} />
+</div>

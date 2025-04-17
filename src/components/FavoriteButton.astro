@@ -6,7 +6,10 @@ const {
 } = Astro.props;
 ---
 
-<button id="favorite-button" aria-label="Add to favorites"
+<button 
+  id="favorite-button" 
+  class="cursor-pointer"
+  aria-label="Add to favorites"
   data-city={city}
   data-latitude={latitude}
   data-longitude={longitude}>

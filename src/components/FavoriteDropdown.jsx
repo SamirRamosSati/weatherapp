@@ -69,7 +69,7 @@ export default function FavoriteDropdown() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="border border-gray-300 px-4 py-1 rounded-md w-full">
+      <DropdownMenuTrigger className="border border-gray-300 px-4 py-1 rounded-md w-full cursor-pointer">
         <span className="whitespace-nowrap">Favorite Cities</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-52">

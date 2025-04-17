@@ -1,65 +1,29 @@
 ---
 import WeatherIcon from "./WeatherIcon.astro";
 import DateText from "./Date.astro";
+import { fetchDailyForecast } from '../lib/api/meteo';
 
-// 1. Fetch weather forecast data from the API
-let forecastData = [];
-const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=49.28&longitude=-123.12&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto");
+const url = new URL(Astro.request.url);
+const dateQuery = url.searchParams.get('date');
+const date = dateQuery ?? new Date().toLocaleDateString('sv-SE');
+const lat = url.searchParams.get('lat') ?? '49.24';
+const lon = url.searchParams.get('lon') ?? '-123.12';
 
-if (response.ok) {
-  const data = await response.json();
-
-  const dates = data.daily.time;
-  const tempsMax = data.daily.temperature_2m_max;
-  const weatherCodes = data.daily.weathercode;
-
-  // 2. Process and store only the next 5 days of forecast
-  for (let i = 0; i < 5; i++) {
-    const fullDate = new Date(dates[i]);
-
-    forecastData.push({
-      day: fullDate.toLocaleDateString("en-US", { weekday: "short" }).toUpperCase(),
-      date: fullDate.getDate(),
-      temp: tempsMax[i],
-      weatherCode: weatherCodes[i],
-      rawDate: dates[i] // used to identify the clicked date
-    });
-  }
-}
+const forecastData = await fetchDailyForecast({date, lat, lon});
 ---
 
-<!-- 3. Render forecast list -->
 {forecastData.length > 0 && (
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-4 md:gap-8">
     {forecastData.map((item) => (
-      <div 
-        class="flex items-center gap-12 p-6 cursor-pointer hover:bg-gray-100"
-        data-date={item.rawDate}
+      <a 
+        href={date === item.rawDate ? '#' : `?date=${item.rawDate}&lat=${lat}&lon=${lon}`} 
+        class={`md:px-4 rounded-md flex justify-center items-center gap-12 cursor-pointer hover:bg-gray-100 ${date === item.rawDate ? 'bg-gray-100' : ''}`}
       >
         <DateText weekday={item.day} date={item.date} />
-        <div class="flex items-center gap-6">
+        <div class=" flex gap-1 md:flex md:items-center ">
           <WeatherIcon code={item.weatherCode} temp={item.temp} />
         </div>
-      </div>
+      </a>
     ))}
   </div>
 )}
-
-<!-- 4. JS script to handle clicks -->
-<script is:inline>
-  function handleClick(event) {
-    const rawDate = event.currentTarget.dataset.date;
-    console.log("Selected date:", rawDate);
-
-    
-    window.dispatchEvent(new CustomEvent("date-selected", {
-      detail: rawDate
-    }));
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("[data-date]").forEach(item => {
-      item.addEventListener("click", handleClick);
-    });
-  });
-</script>

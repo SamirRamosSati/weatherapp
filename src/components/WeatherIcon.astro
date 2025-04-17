@@ -3,7 +3,7 @@
 
 export interface Props {
   code: number;
-  temp: number;
+  temp: number | string;
   isVertical?: boolean;
   size?: string;
   class?: string;
@@ -15,39 +15,55 @@ const className = Astro.props.class || '';
 let sizeClass, tempClass, celcClass, gapClass;
 
 switch (size) {
-  case 'xl':
-    sizeClass = 'w-60';
-    tempClass = 'text-8xl';
-    celcClass = 'text-5xl';
-    gapClass = 'gap-1';
-    break;
-  default:
-    sizeClass = 'w-14';
+    case 'xl':
+        sizeClass = 'w-45 md:w-60';
+        tempClass = 'text-4xl md:text-8xl';
+        celcClass = 'text-2xl md:text-5xl'
+        gapClass = 'gap-1';
+        break;
+    default:
 
-    if (isVertical) {
-      tempClass = 'text-xl';
-      celcClass = 'text-sm';
-    } else {
-      tempClass = 'text-3xl';
-      celcClass = 'text-xl';
-    }
-
-    gapClass = 'gap-4';
-    break;
+        if (isVertical) {
+          sizeClass = 'w-16';
+          tempClass = 'text-xl';
+          celcClass = 'text-sm'
+          gapClass = 'gap-0';
+        } else {
+          sizeClass = 'w-20';
+          tempClass = 'text-2xl md:text-3xl';
+          celcClass = 'text-lg md:text-xl'
+          gapClass = 'gap-4';
+        }
+        
+        break;
 }
 
 function getWeatherIcon(code: number) {
   switch (code) {
     case 0:
-      sizeClass = size === 'xl' ? 'w-40' : 'w-8';
-      return "/icons/sun.png";
+      if (size === 'xl') {
+        return "/icons/sun-full.png";
+      } else {
+        return "/icons/sun.png";
+      }
     case 1:
     case 2:
     case 3:
       return "/icons/sun-cloud.png";
+    case 45:
+    case 48:
+      return "/icons/cloud.png";
+    case 51:
+    case 53:
+    case 55:
+    case 56:
+    case 57:
+      return "/icons/rain3.png";
     case 61:
     case 63:
     case 65:
+    case 66:
+    case 67:
     case 80:
     case 81:
     case 82:
@@ -55,6 +71,7 @@ function getWeatherIcon(code: number) {
     case 71:
     case 73:
     case 75:
+    case 77:
     case 85:
     case 86:
       return "/icons/snow.png";
@@ -63,15 +80,18 @@ function getWeatherIcon(code: number) {
     case 99:
       return "/icons/thunderstorm.png";
     default:
-      sizeClass = size === 'xl' ? 'w-40' : 'w-8';
-      return "/icons/sun.png";
+      if (size === 'xl') {
+        return "/icons/sun-full.png";
+      } else {
+        return "/icons/sun.png";
+      }
   }
 }
 
 const icon = getWeatherIcon(code);
 ---
-<div class={` ${isVertical ? 'flex flex-col justify-between items-center h-26': 'flex items-center'} ${gapClass} ${className}`}>
-  <div class={`${size === 'xl' ? 'w-60' : 'w-14'} flex justify-center`}>
+<div class={` ${isVertical ? 'flex flex-col justify-between items-center': 'flex items-center'} ${gapClass} ${className}`}>
+  <div class={`${sizeClass} flex justify-center`}>
     <img src={icon} alt="weather icon" class={sizeClass} />
   </div>
   <p class={`${tempClass} ${isVertical ? 'translate-x-2' : 'gap-1'} font-medium flex`}>
