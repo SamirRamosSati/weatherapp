@@ -4,11 +4,20 @@ import CurrentWeather from '../components/CurrentWeather.astro';
 import ThreeHourForecast from '../components/ThreeHourForecast.astro';
 import Welcome from '../components/Welcome.astro';
 import DailyForecast from "../components/DailyForecast.astro";
+import SearchInput from '../components/SearchInput.astro';
 import Layout from '../layouts/Layout.astro';
 import "../styles/global.css";
 ---
 
 <Layout>
+	<div class="flex items-center max-w-[1080px] mx-auto pt-28 justify-between">
+		<div>Favorite Cities</div>
+		<h1 id="city-name" class="text-center text-2xl font-medium w-full">Vancouver</h1>
+		<div class="max-w-[240px] ml-auto">
+			<SearchInput />
+		</div>
+	</div>
+
 	<div class="flex justify-center max-w-[1080px] mx-auto pt-28">
 		<div class="w-full">
 			<div class="flex">
@@ -20,3 +29,13 @@ import "../styles/global.css";
   		<DailyForecast />
 	</div>
 </Layout>
+
+<script>
+  window.addEventListener('cityChanged', (event) => {
+    const cityData = event.detail;
+    const cityNameElement = document.getElementById('city-name');
+    if (cityNameElement) {
+      cityNameElement.textContent = cityData.address || 'Vancouver';
+    }
+  });
+</script>
