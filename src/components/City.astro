@@ -1,15 +1,7 @@
 ---
 import FavoriteButton from '../components/FavoriteButton.astro';
 
-const { class: className } = Astro.props;
-
-const url = new URL(Astro.request.url);
-const params = url.searchParams;
-
-const city = params.get('city');
-const lon = params.get('lon');
-const lat = params.get('lat');
-
+const { class: className, city, lat, lon} = Astro.props;
 ---
 
 <div class={`w-full flex items-center gap-2 justify-center ${className}`}>

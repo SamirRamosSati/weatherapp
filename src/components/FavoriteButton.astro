@@ -1,9 +1,5 @@
 ---
-const { 
-  city = "Vancouver", 
-  latitude = 49.2827, 
-  longitude = -123.1207 
-} = Astro.props;
+const { city, latitude, longitude } = Astro.props;
 ---
 
 <button 
@@ -33,27 +29,6 @@ const {
     };
     
     updateStarState();
-    document.addEventListener('favoritesUpdated', updateStarState);
-    
-    document.addEventListener('citySelected', (event) => {
-      if (event.detail) {
-        currentCityData = event.detail;
-        button.dataset.city = currentCityData.address;
-        button.dataset.latitude = currentCityData.latitude.toString();
-        button.dataset.longitude = currentCityData.longitude.toString();
-        updateStarState();
-      }
-    });
-
-    window.addEventListener('cityChanged', (event) => {
-      if (event.detail) {
-        currentCityData = event.detail;
-        button.dataset.city = currentCityData.address;
-        button.dataset.latitude = currentCityData.latitude.toString();
-        button.dataset.longitude = currentCityData.longitude.toString();
-        updateStarState();
-      }
-    });
     
     button.addEventListener('click', () => {
       toggleFavorite();

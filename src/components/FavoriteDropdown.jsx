@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 
 export default function FavoriteDropdown() {
   const [favorites, setFavorites] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -50,13 +49,9 @@ export default function FavoriteDropdown() {
   }, []);
 
   const handleCitySelect = (city) => {
-    setSelectedCity(city);
-
-    const citySelectedEvent = new CustomEvent("citySelected", {
-      detail: city,
-      bubbles: true,
-    });
-    document.dispatchEvent(citySelectedEvent);
+    window.location.href = `/?lat=${city.latitude}&lon=${
+      city.longitude
+    }&city=${encodeURIComponent(city.address)}`;
   };
 
   if (!isMounted) {
@@ -78,6 +73,7 @@ export default function FavoriteDropdown() {
             <DropdownMenuItem
               key={index}
               onClick={() => handleCitySelect(city)}
+              className="cursor-pointer"
             >
               {city.address}
             </DropdownMenuItem>

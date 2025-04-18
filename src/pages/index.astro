@@ -11,6 +11,11 @@ import Layout from '../layouts/Layout.astro';
 import UserLocation from '@/components/UserLocation.astro';
 import "../styles/global.css";
 
+const url = new URL(Astro.request.url);
+const lat = url.searchParams.get('lat') || 49.2827;
+const lon = url.searchParams.get('lon') || -123.1207;
+const city = url.searchParams.get('city') || 'Vancouver';
+
 let selectedDate = new Date().toISOString().split("T")[0];
 
 const cookieHeader = Astro.request.headers.get("cookie");
@@ -28,21 +33,21 @@ if (cookieHeader) {
 			<div class="max-w-[240px] ml-auto">
 				<FavoriteDropdown client:load />
 			</div>
-			<City class="hidden md:flex" />
+			<City class="hidden md:flex" {city} {lat} {lon} />
 			<div class="max-w-[240px] ml-auto">
 				<SearchInput />
 			</div>
 		</div>	
-		<City class="md:hidden py-8" />
+		<City class="md:hidden py-8" {city} {lat} {lon} />
 		<div class="flex flex-col md:flex-row md:items-between gap-16 md:gap-20 justify-center ">
 			<div class="w-full space-y-4 md:space-y-0">
 				<div class="flex">
 					<CurrentDate />
 					<CurrentWeather />
 				</div>
-				<ThreeHourForecast lat="48.8566" lon="2.3522" city="Paris" />
+				<ThreeHourForecast {lat} {lon} />
 			</div>
-			<DailyForecast />
+			<DailyForecast {lat} {lon} {city} />
 		</div>
 	</div>
 </div>
@@ -58,22 +63,5 @@ if (cookieHeader) {
       document.cookie = `selectedDate=${selectedDate}; path=/`;
       window.location.reload();
     }, 100);
-  });
-
-  // Lógica para atualizar nome da cidade (SearchInput)
-  window.addEventListener('cityChanged', (event) => {
-    const cityData = event.detail;
-    const cityNameElement = document.getElementById('city-name');
-    if (cityNameElement) {
-      cityNameElement.textContent = cityData.address || 'Vancouver';
-    }
-  });
-
-  document.addEventListener('citySelected', (event) => {
-	const cityData = event.detail;
-    const cityNameElement = document.getElementById('city-name');
-    if (cityNameElement) {
-      cityNameElement.textContent = cityData.address || 'Vancouver';
-    }
   });
 </script>

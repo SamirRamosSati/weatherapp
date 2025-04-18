@@ -57,29 +57,15 @@ import { Input } from '../components/ui/input';
     cities.forEach(city => {
       const li = document.createElement('li');
       li.innerHTML = `
-        <button class="w-full text-left px-4 py-2 hover:bg-gray-100" 
-                data-city='${JSON.stringify(city)}'>
+        <a href="/?lat=${city.latitude}&lon=${city.longitude}&city=${encodeURIComponent(city.address)}" 
+           class="block w-full text-left px-4 py-2 hover:bg-gray-100">
           ${city.address}
-        </button>
+        </a>
       `;
       resultsList.appendChild(li);
     });
 
     searchResults.classList.remove('hidden');
-  }
-
-  function selectCity(cityData) {
-    const searchInput = document.getElementById('city-search');
-    const searchResults = document.getElementById('search-results');
-
-    if (!searchInput || !searchResults) return;
-
-    searchInput.value = cityData.address;
-    searchResults.classList.add('hidden');
-
-    window.dispatchEvent(new CustomEvent('cityChanged', { 
-      detail: cityData 
-    }));
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -99,23 +85,11 @@ import { Input } from '../components/ui/input';
       
       try {
         const cities = await searchCities(query);
-        displayResults(cities)
+        displayResults(cities);
       } catch (error) {
-          console.error('city search error:', error);
+        console.error('city search error:', error);
       }
     }, 300));
-    
-    searchResults.addEventListener('click', (e) => {
-      const cityButton = e.target.closest('button[data-city]');
-      if (cityButton) {
-        try {
-          const cityData = JSON.parse(cityButton.dataset.city);
-          selectCity(cityData);
-        } catch (error) {
-          console.error('city data parse error:', error);
-        }
-      }
-    });
     
     document.addEventListener('click', (e) => {
       if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
@@ -132,7 +106,7 @@ import { Input } from '../components/ui/input';
         const cities = await searchCities(query);
         
         if (cities.length > 0) {
-          selectCity(cities[0]);
+          window.location.href = `/?lat=${cities[0].latitude}&lon=${cities[0].longitude}&city=${encodeURIComponent(cities[0].address)}`;
         }
       } catch (error) {
         console.error('city search error:', error);

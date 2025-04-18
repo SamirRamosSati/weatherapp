@@ -2,10 +2,10 @@
 import WeatherIcon from './WeatherIcon.astro';
 import { fetchHourForcast } from '../lib/api/meteo';
 
+const {lat, lon} = Astro.props;
+
 const url = new URL(Astro.request.url);
 const date = url.searchParams.get('date') ?? new Date().toISOString().split('T')[0];
-const lat = url.searchParams.get('lat') ?? '49.2827';
-const lon = url.searchParams.get('lon') ?? '-123.1207';
 
 const { hours, temps, codes } = await fetchHourForcast({date, lat, lon});
 ---
