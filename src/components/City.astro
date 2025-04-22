@@ -26,6 +26,7 @@ const { class: className, city, lat, lon} = Astro.props;
 
             window.location.href = window.location.pathname + `?lat=${lat}&lon=${lon}&city=${cityName}${date ? '&date=' + date : ''}`;
         } catch (error) {
+            alert(error);
             console.error(error);
             throw error;
         }
